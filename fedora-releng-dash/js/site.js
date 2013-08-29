@@ -1,7 +1,8 @@
 $(document).ready(function() {
     var selectors = {
         "org.fedoraproject.prod.compose.rawhide.mash.complete": "#rawhide-mash-complete",
-        "org.fedoraproject.prod.compose.rawhide.pungify.complete": "#rawhide-pungify-complete",
+        // There's no such thing as a rawhide pungify.. right?
+        //"org.fedoraproject.prod.compose.rawhide.pungify.complete": "#rawhide-pungify-complete",
         "org.fedoraproject.prod.compose.rawhide.rsync.complete": "#rawhide-rsync-complete",
         "org.fedoraproject.prod.compose.rawhide.complete": "#rawhide-complete",
 
@@ -25,9 +26,14 @@ $(document).ready(function() {
         });
     };
     var hollaback = function(data, topic) {
+        var content;
         var msg = data.raw_messages[0];
-        var time_obj = moment(msg.timestamp.toString(), '%X');
-        var content = time_obj.fromNow() + " (" + time_obj.calendar() + ")";
+        if (msg === undefined) {
+            content = "errored..";
+        } else {
+            var time_obj = moment(msg.timestamp.toString(), '%X');
+            content = time_obj.fromNow() + " (" + time_obj.calendar() + ")";
+        }
         $(selectors[topic]).html(content);
     };
 
