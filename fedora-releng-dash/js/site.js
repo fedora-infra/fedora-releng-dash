@@ -11,7 +11,6 @@ $(document).ready(function() {
         "org.fedoraproject.prod.compose.branched.complete": "#branched-complete",
     }
     var get_fedmsg_msg = function(topic, callback) {
-        console.log(topic);
         $.ajax({
             url: "https://apps.fedoraproject.org/datagrepper/raw/",
             data: 'delta=360000&rows_per_page=20&order=desc&meta=link&topic=' + topic,
