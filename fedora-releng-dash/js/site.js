@@ -1,8 +1,7 @@
 $(document).ready(function() {
     var selectors = {
         "org.fedoraproject.prod.compose.rawhide.mash.complete": "#rawhide-mash-complete",
-        // There's no such thing as a rawhide pungify.. right?
-        //"org.fedoraproject.prod.compose.rawhide.pungify.complete": "#rawhide-pungify-complete",
+        "org.fedoraproject.prod.compose.rawhide.pungify.complete": "#rawhide-pungify-complete",
         "org.fedoraproject.prod.compose.rawhide.rsync.complete": "#rawhide-rsync-complete",
         "org.fedoraproject.prod.compose.rawhide.complete": "#rawhide-complete",
 
