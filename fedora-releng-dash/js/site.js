@@ -1,6 +1,13 @@
 $(document).ready(function() {
     var selectors = {
+        "org.fedoraproject.prod.compose.rawhide.mash.complete": "#rawhide-mash-complete",
+        "org.fedoraproject.prod.compose.rawhide.pungify.complete": "#rawhide-pungify-complete",
+        "org.fedoraproject.prod.compose.rawhide.rsync.complete": "#rawhide-rsync-complete",
         "org.fedoraproject.prod.compose.rawhide.complete": "#rawhide-complete",
+
+        "org.fedoraproject.prod.compose.branched.mash.complete": "#branched-mash-complete",
+        "org.fedoraproject.prod.compose.branched.pungify.complete": "#branched-pungify-complete",
+        "org.fedoraproject.prod.compose.branched.rsync.complete": "#branched-rsync-complete",
         "org.fedoraproject.prod.compose.branched.complete": "#branched-complete",
     }
     var get_fedmsg_msg = function(topic, callback) {
