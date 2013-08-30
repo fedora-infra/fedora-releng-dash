@@ -89,11 +89,11 @@ $(document).ready(function() {
     };
 
     var make_completed_content = function(t) {
-        return "completed " + t.fromNow() + " (" + t.calendar() + ")";
+        return "<small>completed " + t.fromNow() + " (" + t.calendar() + ")</small>";
     }
 
     var make_started_content = function(t) {
-        return "started " + t.fromNow() + " (" + t.calendar() + ")";
+        return "<small>started " + t.fromNow() + " (" + t.calendar() + ")</small>";
     }
 
     var ui_update = function(selector, cls, content) {
