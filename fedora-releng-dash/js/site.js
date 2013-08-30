@@ -1,19 +1,35 @@
 $(document).ready(function() {
-    var selectors = {
-        "org.fedoraproject.prod.compose.rawhide.mash.complete": "#rawhide-mash-complete",
-        "org.fedoraproject.prod.compose.rawhide.pungify.complete": "#rawhide-pungify-complete",
-        "org.fedoraproject.prod.compose.rawhide.rsync.complete": "#rawhide-rsync-complete",
-        "org.fedoraproject.prod.compose.rawhide.complete": "#rawhide-complete",
-
-        "org.fedoraproject.prod.compose.branched.mash.complete": "#branched-mash-complete",
-        "org.fedoraproject.prod.compose.branched.pungify.complete": "#branched-pungify-complete",
-        "org.fedoraproject.prod.compose.branched.rsync.complete": "#branched-rsync-complete",
-        "org.fedoraproject.prod.compose.branched.complete": "#branched-complete",
+    // Hotpatch an 'endsWith' utility on the native String class... but
+    // only if no one else has done so already.
+    if (typeof String.prototype.endsWith !== 'function') {
+        String.prototype.endsWith = function(suffix) {
+            return this.indexOf(suffix, this.length - suffix.length) !== -1;
+        };
     }
+
+    // A mapping of fedmsg topic fragments to DOM elements.
+    var selectors = {
+        "org.fedoraproject.prod.compose.rawhide.mash": "#rawhide-mash",
+        "org.fedoraproject.prod.compose.rawhide.pungify": "#rawhide-pungify",
+        "org.fedoraproject.prod.compose.rawhide.rsync": "#rawhide-rsync",
+        "org.fedoraproject.prod.compose.rawhide": "#rawhide-compose",
+
+        "org.fedoraproject.prod.compose.branched.mash": "#branched-mash",
+        "org.fedoraproject.prod.compose.branched.pungify": "#branched-pungify",
+        "org.fedoraproject.prod.compose.branched.rsync": "#branched-rsync",
+        "org.fedoraproject.prod.compose.branched": "#branched-compose",
+    }
+
     var get_fedmsg_msg = function(topic, callback) {
+        var data = $.param({
+            'delta': 360000,
+            'rows_per_page': 20,
+            'order': 'desc',
+            'meta': 'link',
+        });
         $.ajax({
             url: "https://apps.fedoraproject.org/datagrepper/raw/",
-            data: 'delta=360000&rows_per_page=20&order=desc&meta=link&topic=' + topic,
+            data: data + '&topic=' + topic + '.start&topic=' + topic + '.complete',
             dataType: "jsonp",
             success: function(data) {callback(data, topic)},
             error: function(data, statusCode) {
@@ -26,16 +42,68 @@ $(document).ready(function() {
     };
     var hollaback = function(data, topic) {
         var content;
-        var msg = data.raw_messages[0];
-        if (msg === undefined) {
-            content = "errored..";
-        } else {
-            var time_obj = moment(msg.timestamp.toString(), '%X');
-            content = time_obj.fromNow() + " (" + time_obj.calendar() + ")";
+        var selector = selectors[topic];
+        var latest_msg_start, latest_msg_complete;
+        $.each(data.raw_messages, function(i, msg) {
+            if (msg.topic.endsWith('.start')) {
+                latest_msg_start = msg;
+                return false;
+            }});
+        $.each(data.raw_messages, function(i, msg) {
+            if (msg.topic.endsWith('.complete')) {
+                latest_msg_complete = msg;
+                return false;
+            }});
+
+        // First, check if datagrepper returned nothing (impossible!)
+        if (latest_msg_complete === undefined || latest_msg_start === undefined) {
+            return ui_update(selector, "text-danger", "errored..");
         }
-        $(selectors[topic]).html(content);
+
+        var now = moment();
+        var twenty_hours_ago = now.subtract('hours', 20);
+
+        var latest_start = moment(latest_msg_start.timestamp.toString(), '%X');
+        var latest_complete = moment(latest_msg_complete.timestamp.toString(), '%X');
+
+        var content, cls;
+
+        // Then, cover all the scenarios we want to cover.
+        if (latest_start.isAfter(latest_complete)) {
+            // If there is a start more recent than a complete, then we're
+            // probably still doing the process right now.  Mark it as "in
+            // progress".
+            cls = "text-warning";
+            content = make_started_content(latest_start);
+        } else if (latest_complete.isBefore(twenty_hours_ago)) {
+            // If the last completion was over this long ago, then mark it
+            // "gray" indicating stale or outdated.
+            cls = "text-muted";
+            content = make_completed_content(latest_complete);
+        } else {
+            // Otherwise we're completed.. and recent.  :)
+            cls = "text-primary";
+            content = make_completed_content(latest_complete);
+        }
+        ui_update(selector, cls, content);
     };
 
+    var make_completed_content = function(t) {
+        return "completed " + t.fromNow() + " (" + t.calendar() + ")";
+    }
+
+    var make_started_content = function(t) {
+        return "started " + t.fromNow() + " (" + t.calendar() + ")";
+    }
+
+    var ui_update = function(selector, cls, content) {
+        // TODO -- remove any other classes
+
+        $(selector + " > p").addClass(cls);
+        $(selector + " > p > .content").html(content);
+    };
+
+    // Kick off our on page load initialization.
     $.each(selectors, function(topic, selector) {
         get_fedmsg_msg(topic, hollaback);
     });
