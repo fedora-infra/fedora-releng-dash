@@ -63,11 +63,17 @@ $(document).ready(function() {
             }});
 
         // First, check if datagrepper returned nothing (impossible!)
-        if (latest_msg_complete === undefined || latest_msg_start === undefined) {
-            console.log(selector);
-            console.log(latest_msg_start);
-            console.log(latest_msg_complete);
-            return ui_update(selector, "text-danger", "errored..");
+        if (latest_msg_complete === undefined && latest_msg_start === undefined) {
+            return ui_update(selector, "text-danger", "(no info found)");
+        }
+
+        // If we're missing one of our message types, then fake out the
+        // timestamp and claim that it occured at the beginning of the epoch.
+        if (latest_msg_complete === undefined) {
+            latest_msg_complete = {timestamp: new Date(0)};
+        }
+        if (latest_msg_start === undefined) {
+            latest_msg_start = {timestamp: new Date(0)};
         }
 
         var now = moment();
