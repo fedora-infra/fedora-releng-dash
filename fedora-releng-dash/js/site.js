@@ -20,18 +20,24 @@ $(document).ready(function() {
         "org.fedoraproject.prod.compose.branched": "#branched-compose",
     }
 
+    var architectures = ["", "ppc", "s390"];
+
     var get_fedmsg_msg = function(topic, callback) {
         var data = $.param({
-            'delta': 360000,
-            'rows_per_page': 20,
+            'delta': 3600000,
+            'rows_per_page': 100,
             'order': 'desc',
-            'meta': 'link',
+            //'meta': 'link',
         });
         $.ajax({
             url: "https://apps.fedoraproject.org/datagrepper/raw/",
             data: data + '&topic=' + topic + '.start&topic=' + topic + '.complete',
             dataType: "jsonp",
-            success: function(data) {callback(data, topic)},
+            success: function(data) {
+                $.each(architectures, function(i, arch) {
+                    callback(data, topic, arch);
+                });
+            },
             error: function(data, statusCode) {
                 console.log("Status code: " + statusCode);
                 console.log(data);
@@ -40,23 +46,27 @@ $(document).ready(function() {
             }
         });
     };
-    var hollaback = function(data, topic) {
+    var hollaback = function(data, topic, arch) {
         var content;
-        var selector = selectors[topic];
+        var selector_prefix = selectors[topic];
+        var selector = selector_prefix + "-" + arch;
         var latest_msg_start, latest_msg_complete;
         $.each(data.raw_messages, function(i, msg) {
-            if (msg.topic.endsWith('.start')) {
+            if (msg.topic.endsWith('.start') && msg.msg.arch == arch) {
                 latest_msg_start = msg;
                 return false;
             }});
         $.each(data.raw_messages, function(i, msg) {
-            if (msg.topic.endsWith('.complete')) {
+            if (msg.topic.endsWith('.complete') && msg.msg.arch == arch) {
                 latest_msg_complete = msg;
                 return false;
             }});
 
         // First, check if datagrepper returned nothing (impossible!)
         if (latest_msg_complete === undefined || latest_msg_start === undefined) {
+            console.log(selector);
+            console.log(latest_msg_start);
+            console.log(latest_msg_complete);
             return ui_update(selector, "text-danger", "errored..");
         }
 
