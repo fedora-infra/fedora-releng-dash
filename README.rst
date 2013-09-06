@@ -3,4 +3,7 @@ Fedora Releng Dash
 
 An html5 dashboard for Fedora Release Engineering.
 
-It couldn't be more *alpha*.  Check it out at http://threebean.org/fedora-releng-dash/
+Version 0.1.
+
+- Production: https://apps.fedoraproject.org/releng-dash/
+- Staging: https://apps.fedoraproject.org/releng-dash/
