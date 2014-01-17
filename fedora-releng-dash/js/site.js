@@ -162,6 +162,20 @@ $(document).ready(function() {
                 return;
             }
 
+            var tokens = msg.msg.srpm.split('-');
+            var arch = tokens[tokens.length - 1];
+
+            // Some of the appliance builds come in different formats.
+            // Here we mangle the "srpm" name so that we can distinguish them.
+            // Not all tasks have this info, so we have to proceed carefully.
+            var info = msg.msg['info'];
+            if (info != undefined) {
+                var options = info.request[info.request.length - 1];
+                if (options.format != undefined) {
+                    msg.msg.srpm = msg.msg.srpm + "-" + options.format;
+                }
+            }
+
             // We only want to process srpms once.  Have seen already?
             if ($.inArray(msg.msg.srpm, seen) != -1) {
                 // Bail out
@@ -171,8 +185,6 @@ $(document).ready(function() {
                 seen.push(msg.msg.srpm);
             }
 
-            var tokens = msg.msg.srpm.split('-');
-            var arch = tokens[tokens.length - 1];
             var selector = selector_prefix + "-" + arch;
             var class_lookup = {
                 'CLOSED': 'text-primary',
