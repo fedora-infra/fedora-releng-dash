@@ -14,10 +14,12 @@ $(document).ready(function() {
         "org.fedoraproject.prod.compose.rawhide.rsync": "#rawhide-rsync",
         "org.fedoraproject.prod.compose.rawhide": "#rawhide-compose",
 
+        /* We currently don't have a 'branched' branch.  restore this later..
         "org.fedoraproject.prod.compose.branched.mash": "#branched-mash",
         "org.fedoraproject.prod.compose.branched.pungify": "#branched-pungify",
         "org.fedoraproject.prod.compose.branched.rsync": "#branched-rsync",
         "org.fedoraproject.prod.compose.branched": "#branched-compose",
+        */
     }
 
     var artifacts = {
