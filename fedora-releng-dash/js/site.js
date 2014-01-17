@@ -182,11 +182,23 @@ $(document).ready(function() {
                 'FAILED': 'failed',
                 'OPEN': 'started',
             }
+            var now = moment();
+            var one_day_ago = now.subtract('hours', 24);
+            var time = moment(msg.timestamp.toString(), '%X');
+            var cls = class_lookup[msg.msg.new];
+            if (time.isBefore(one_day_ago)) {
+                // Because it is old and stale.
+                cls = 'text-muted';
+            }
             $(selector).append(
-                "<p class='content " + class_lookup[msg.msg.new] + "'>" +
+                "<p class='" + cls + "'>" +
                 msg.msg.srpm + " " +
-                text_lookup[msg.msg.new] + " " +
-                "<a href='" + msg.meta.link + "'>(details)</a>" +
+                "</br>" +
+                "<small>" +
+                text_lookup[msg.msg.new] +" " +
+                time.fromNow() + " " +
+                "</small> " +
+                "<strong><a href='" + msg.meta.link + "'>(details)</a></strong>" +
                 "</p>"
             );
         });
