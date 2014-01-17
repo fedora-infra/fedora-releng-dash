@@ -176,7 +176,7 @@ $(document).ready(function() {
                 "<p class='content " + class_lookup[msg.msg.new] + "'>" +
                 msg.msg.srpm + " " +
                 text_lookup[msg.msg.new] + " " +
-                "<a href='" + msg.msg.link + "'>(details)</a>" +
+                "<a href='" + msg.meta.link + "'>(details)</a>" +
                 "</p>"
             );
         });
