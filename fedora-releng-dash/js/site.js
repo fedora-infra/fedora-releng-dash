@@ -153,10 +153,22 @@ $(document).ready(function() {
     }
     var task_hollaback = function(data, artifact) {
         var selector_prefix = artifacts[artifact];
+        var seen = [];
         $.each(data.raw_messages, function(i, msg) {
+            // We only want artifacts, not other people's scratch builds.
             if (msg.msg.method != artifact) {
-                return
+                return;
             }
+
+            // We only want to process srpms once.  Have seen already?
+            if ($.inArray(msg.msg.srpm, seen) != -1) {
+                // Bail out
+                return;
+            } else {
+                // Throw it in the array so we'll see it next time.
+                seen.push(msg.msg.srpm);
+            }
+
             var tokens = msg.msg.srpm.split('-');
             var arch = tokens[tokens.length - 1];
             var selector = selector_prefix + "-" + arch;
