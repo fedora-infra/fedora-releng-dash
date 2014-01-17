@@ -20,7 +20,16 @@ $(document).ready(function() {
         "org.fedoraproject.prod.compose.branched": "#branched-compose",
     }
 
-    var architectures = ["", "ppc", "s390"];
+    var artifacts = {
+        'appliance': '#appliance',
+        'livecd': '#livecd',
+    }
+
+    var main_architectures = ["", "ppc", "s390"];
+    var task_architectures = {
+        'livecd': ["x86_64", "i686"],
+        'appliance': ['x86_64', 'i386', 'armhfp'],
+    }
 
     var get_fedmsg_msg = function(topic, callback) {
         var data = $.param({
@@ -34,7 +43,7 @@ $(document).ready(function() {
             data: data + '&topic=' + topic + '.start&topic=' + topic + '.complete',
             dataType: "jsonp",
             success: function(data) {
-                $.each(architectures, function(i, arch) {
+                $.each(main_architectures, function(i, arch) {
                     callback(data, topic, arch);
                 });
             },
@@ -46,7 +55,7 @@ $(document).ready(function() {
             }
         });
     };
-    var hollaback = function(data, topic, arch) {
+    var main_hollaback = function(data, topic, arch) {
         var content;
         var selector_prefix = selectors[topic];
         var selector = selector_prefix + "-" + arch;
@@ -119,8 +128,65 @@ $(document).ready(function() {
         $(selector + " > p > .content").html(content);
     };
 
+    var get_fedmsg_tasks = function(artifact, callback) {
+        var data = $.param({
+            'delta': 3600000,
+            'rows_per_page': 100,
+            'order': 'desc',
+            'meta': 'link',
+            'user': 'masher',
+        });
+        console.log(data);
+        $.ajax({
+            url: "https://apps.fedoraproject.org/datagrepper/raw/",
+            data: data,
+            dataType: "jsonp",
+            success: function(data) {
+                callback(data, artifact);
+            },
+            error: function(data, statusCode) {
+                console.log("Status code: " + statusCode);
+                console.log(data);
+                console.log(data.responseText);
+                console.log(data.status);
+            }
+        });
+    }
+    var task_hollaback = function(data, artifact) {
+        var selector_prefix = artifacts[artifact];
+        $.each(data.raw_messages, function(i, msg) {
+            if (msg.msg.method != artifact) {
+                return
+            }
+            var tokens = msg.msg.srpm.split('-');
+            var arch = tokens[tokens.length - 1];
+            var selector = selector_prefix + "-" + arch;
+            console.log(selector);
+            var class_lookup = {
+                'CLOSED': 'text-primary',
+                'FAILED': 'text-danger',
+                'OPEN': 'text-warning',
+            }
+            var text_lookup = {
+                'CLOSED': 'completed',
+                'FAILED': 'failed',
+                'OPEN': 'started',
+            }
+            $(selector).append(
+                "<p class='content " + class_lookup[msg.msg.new] + "'>" +
+                msg.msg.srpm + " " +
+                text_lookup[msg.msg.new] + " " +
+                "<a href='" + msg.msg.link + "'>(details)</a>" +
+                "</p>"
+            );
+        });
+    }
+
     // Kick off our on page load initialization.
     $.each(selectors, function(topic, selector) {
-        get_fedmsg_msg(topic, hollaback);
+        get_fedmsg_msg(topic, main_hollaback);
     });
+    $.each(artifacts, function(name, selector) {
+        get_fedmsg_tasks(name, task_hollaback);
+    })
 });
