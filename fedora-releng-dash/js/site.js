@@ -136,7 +136,6 @@ $(document).ready(function() {
             'meta': 'link',
             'user': 'masher',
         });
-        console.log(data);
         $.ajax({
             url: "https://apps.fedoraproject.org/datagrepper/raw/",
             data: data,
@@ -161,7 +160,6 @@ $(document).ready(function() {
             var tokens = msg.msg.srpm.split('-');
             var arch = tokens[tokens.length - 1];
             var selector = selector_prefix + "-" + arch;
-            console.log(selector);
             var class_lookup = {
                 'CLOSED': 'text-primary',
                 'FAILED': 'text-danger',
