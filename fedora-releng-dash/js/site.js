@@ -27,7 +27,7 @@ $(document).ready(function() {
         'livecd': '#livecd',
     }
 
-    var main_architectures = ["", "ppc", "s390"];
+    var main_architectures = ["", "arm", "ppc", "s390"];
     var task_architectures = {
         'livecd': ["x86_64", "i686"],
         'appliance': ['x86_64', 'i386', 'armhfp'],
