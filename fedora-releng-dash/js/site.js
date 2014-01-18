@@ -172,7 +172,7 @@ $(document).ready(function() {
             if (info != undefined) {
                 var options = info.request[info.request.length - 1];
                 if (options.format != undefined) {
-                    msg.msg.srpm = msg.msg.srpm + "-" + options.format;
+                    msg.msg.srpm = msg.msg.srpm + " (" + options.format + ")";
                 }
             }
 
