@@ -14,10 +14,19 @@ $(document).ready(function() {
         "org.fedoraproject.prod.compose.rawhide.rsync": "#rawhide-rsync",
         "org.fedoraproject.prod.compose.rawhide": "#rawhide-compose",
 
+        /* We currently don't have a 'branched' branch.  restore this later..
         "org.fedoraproject.prod.compose.branched.mash": "#branched-mash",
         "org.fedoraproject.prod.compose.branched.pungify": "#branched-pungify",
         "org.fedoraproject.prod.compose.branched.rsync": "#branched-rsync",
         "org.fedoraproject.prod.compose.branched": "#branched-compose",
+        */
+
+        /* For whatever reason, epelbeta doesn't have these messages..
+        "org.fedoraproject.prod.compose.epelbeta.mash": "#epelbeta-mash",
+        "org.fedoraproject.prod.compose.epelbeta.pungify": "#epelbeta-pungify",
+        "org.fedoraproject.prod.compose.epelbeta.rsync": "#epelbeta-rsync",
+        */
+        "org.fedoraproject.prod.compose.epelbeta": "#epelbeta-compose",
     }
 
     var artifacts = {
@@ -25,7 +34,7 @@ $(document).ready(function() {
         'livecd': '#livecd',
     }
 
-    var main_architectures = ["", "ppc", "s390"];
+    var main_architectures = ["", "arm", "ppc", "s390"];
     var task_architectures = {
         'livecd': ["x86_64", "i686"],
         'appliance': ['x86_64', 'i386', 'armhfp'],
@@ -60,6 +69,13 @@ $(document).ready(function() {
         var selector_prefix = selectors[topic];
         var selector = selector_prefix + "-" + arch;
         var latest_msg_start, latest_msg_complete;
+
+        $.each(data.raw_messages, function(i, msg) {
+            // Assign the blank string to this field if it is undefined.
+            // Not all messages are nicely formed.  epel messages particularly.
+            msg.msg.arch = msg.msg.arch || "";
+        });
+
         $.each(data.raw_messages, function(i, msg) {
             if (msg.topic.endsWith('.start') && msg.msg.arch == arch) {
                 latest_msg_start = msg;
@@ -160,6 +176,20 @@ $(document).ready(function() {
                 return;
             }
 
+            var tokens = msg.msg.srpm.split('-');
+            var arch = tokens[tokens.length - 1];
+
+            // Some of the appliance builds come in different formats.
+            // Here we mangle the "srpm" name so that we can distinguish them.
+            // Not all tasks have this info, so we have to proceed carefully.
+            var info = msg.msg['info'];
+            if (info != undefined) {
+                var options = info.request[info.request.length - 1];
+                if (options.format != undefined) {
+                    msg.msg.srpm = msg.msg.srpm + " (" + options.format + ")";
+                }
+            }
+
             // We only want to process srpms once.  Have seen already?
             if ($.inArray(msg.msg.srpm, seen) != -1) {
                 // Bail out
@@ -169,8 +199,6 @@ $(document).ready(function() {
                 seen.push(msg.msg.srpm);
             }
 
-            var tokens = msg.msg.srpm.split('-');
-            var arch = tokens[tokens.length - 1];
             var selector = selector_prefix + "-" + arch;
             var class_lookup = {
                 'CLOSED': 'text-primary',
