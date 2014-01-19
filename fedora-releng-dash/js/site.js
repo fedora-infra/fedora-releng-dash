@@ -20,6 +20,13 @@ $(document).ready(function() {
         "org.fedoraproject.prod.compose.branched.rsync": "#branched-rsync",
         "org.fedoraproject.prod.compose.branched": "#branched-compose",
         */
+
+        /* For whatever reason, epelbeta doesn't have these messages..
+        "org.fedoraproject.prod.compose.epelbeta.mash": "#epelbeta-mash",
+        "org.fedoraproject.prod.compose.epelbeta.pungify": "#epelbeta-pungify",
+        "org.fedoraproject.prod.compose.epelbeta.rsync": "#epelbeta-rsync",
+        */
+        "org.fedoraproject.prod.compose.epelbeta": "#epelbeta-compose",
     }
 
     var artifacts = {
@@ -62,6 +69,13 @@ $(document).ready(function() {
         var selector_prefix = selectors[topic];
         var selector = selector_prefix + "-" + arch;
         var latest_msg_start, latest_msg_complete;
+
+        $.each(data.raw_messages, function(i, msg) {
+            // Assign the blank string to this field if it is undefined.
+            // Not all messages are nicely formed.  epel messages particularly.
+            msg.msg.arch = msg.msg.arch || "";
+        });
+
         $.each(data.raw_messages, function(i, msg) {
             if (msg.topic.endsWith('.start') && msg.msg.arch == arch) {
                 latest_msg_start = msg;
