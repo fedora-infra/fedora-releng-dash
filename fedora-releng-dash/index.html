@@ -102,6 +102,27 @@
 
         <div class="row">
             <div class="branched col-md-6">
+                <h3>Bodhi Updates (Fedora)</h3>
+                <div id="updates-fedora">
+                    <div id="updates-fedora-20-updates"><p>F20 Updates <span class="content">...</span>.</p></div>
+                    <div id="updates-fedora-20-updates-testing"><p>F20 Testing <span class="content">...</span>.</p></div>
+                    <div id="updates-fedora-19-updates"><p>F19 Updates <span class="content">...</span>.</p></div>
+                    <div id="updates-fedora-19-updates-testing"><p>F19 Testing <span class="content">...</span>.</p></div>
+                </div>
+            </div>
+            <div class="branched col-md-6">
+                <h3>Bodhi Updates (EPEL)</h3>
+                <div id="updates-epel">
+                    <div id="updates-epel-6-epel"><p>EL6 Updates <span class="content">...</span>.</p></div>
+                    <div id="updates-epel-6-epel-testing"><p>EL6 Testing <span class="content">...</span>.</p></div>
+                    <div id="updates-epel-5-epel"><p>EL5 Updates <span class="content">...</span>.</p></div>
+                    <div id="updates-epel-5-epel-testing"><p>EL5 Testing <span class="content">...</span>.</p></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="branched col-md-6">
                 <h3>LiveCD Builds</h3>
                 <div id="livecd-container">
                     <div id="livecd-x86_64"><h4>x86_64</h4></div>
@@ -123,11 +144,14 @@
 
     <div id="footer">
       <div class="container">
-          <p class="text-muted credit">©2013 Red Hat, Inc., <a href="http://threebean.org">Ralph Bean </a>.  Get the <a href="https://github.com/fedora-infra/fedora-releng-dash">source</a>.</p>
+          <p class="text-muted credit">©2013-2014 Red Hat, Inc., <a href="http://threebean.org">Ralph Bean </a>.  Get the <a href="https://github.com/fedora-infra/fedora-releng-dash">source</a>.</p>
       </div>
     </div>
     <script src="js/jquery.min.js"></script>
     <script src="js/moment.min.js"></script>
-    <script src="js/site.js"></script>
+    <script src="js/site/common.js"></script>
+    <script src="js/site/compose.js"></script>
+    <script src="js/site/updates.js"></script>
+    <script src="js/site/artifacts.js"></script>
   </body>
 </html>
