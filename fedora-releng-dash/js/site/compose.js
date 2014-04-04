@@ -1,6 +1,6 @@
 $(document).ready(function() {
     // A mapping of fedmsg topic fragments to DOM elements.
-    var compose_selectors = {
+    var selectors = {
         "org.fedoraproject.prod.compose.rawhide.mash": "#rawhide-mash",
         "org.fedoraproject.prod.compose.rawhide.pungify": "#rawhide-pungify",
         "org.fedoraproject.prod.compose.rawhide.rsync": "#rawhide-rsync",
@@ -21,9 +21,9 @@ $(document).ready(function() {
         "org.fedoraproject.prod.compose.epelbeta": "#epelbeta-compose",
     }
 
-    var compose_architectures = ["", "arm", "ppc", "s390"];
+    var architectures = ["", "arm", "ppc", "s390"];
 
-    var get_compose_msg = function(topic, callback) {
+    var get_msg = function(topic, callback) {
         var data = $.param({
             'delta': 3600000,
             'rows_per_page': 100,
@@ -35,7 +35,7 @@ $(document).ready(function() {
             data: data + '&topic=' + topic + '.start&topic=' + topic + '.complete',
             dataType: "jsonp",
             success: function(data) {
-                $.each(compose_architectures, function(i, arch) {
+                $.each(architectures, function(i, arch) {
                     callback(data, topic, arch);
                 });
             },
@@ -48,9 +48,9 @@ $(document).ready(function() {
         });
     };
 
-    var compose_hollaback = function(data, topic, arch) {
+    var hollaback = function(data, topic, arch) {
         var content;
-        var selector_prefix = compose_selectors[topic];
+        var selector_prefix = selectors[topic];
         var selector = selector_prefix + "-" + arch;
         var latest_msg_start, latest_msg_complete;
 
@@ -129,7 +129,7 @@ $(document).ready(function() {
     };
 
     // Kick off our on page load initialization.
-    $.each(compose_selectors, function(topic, selector) {
-        get_compose_msg(topic, compose_hollaback);
+    $.each(selectors, function(topic, selector) {
+        get_msg(topic, hollaback);
     });
 });

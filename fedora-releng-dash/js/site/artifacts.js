@@ -1,19 +1,11 @@
 $(document).ready(function() {
-    // Hotpatch an 'endsWith' utility on the native String class... but
-    // only if no one else has done so already.
-    if (typeof String.prototype.endsWith !== 'function') {
-        String.prototype.endsWith = function(suffix) {
-            return this.indexOf(suffix, this.length - suffix.length) !== -1;
-        };
-    }
-
     // A mapping of fedmsg topic fragments to DOM elements.
-    var artifact_selectors = {
+    var selectors = {
         'appliance': '#appliance',
         'livecd': '#livecd',
     }
 
-    var get_artifact_msg = function(artifact, callback) {
+    var get_msg = function(artifact, callback) {
         var data = $.param({
             'delta': 3600000,
             'rows_per_page': 100,
@@ -36,8 +28,8 @@ $(document).ready(function() {
             }
         });
     }
-    var artifact_hollaback = function(data, artifact) {
-        var selector_prefix = artifact_selectors[artifact];
+    var hollaback = function(data, artifact) {
+        var selector_prefix = selectors[artifact];
         var seen = [];
         $.each(data.raw_messages, function(i, msg) {
             // We only want artifacts, not other people's scratch builds.
@@ -102,7 +94,7 @@ $(document).ready(function() {
     }
 
     // Kick off our on page load initialization.
-    $.each(artifact_selectors, function(name, selector) {
-        get_artifact_msg(name, artifact_hollaback);
+    $.each(selectors, function(name, selector) {
+        get_msg(name, hollaback);
     })
 });
