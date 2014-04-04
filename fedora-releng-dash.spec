@@ -1,7 +1,7 @@
 %global prefix /srv/web
 
 Name:           fedora-releng-dash
-Version:        0.4
+Version:        0.5
 Release:        1%{?dist}
 Summary:        An HTML5 readonly dashboard for Fedora Release Engineering
 
@@ -37,6 +37,11 @@ cp -r %{name}/{index.html,assets,css,js} %{buildroot}/%{prefix}/%{name}/.
 %attr(755, httpd, httpd) %dir %{prefix}/%{name}/
 
 %changelog
+* Fri Apr 04 2014 Ralph Bean <rbean@redhat.com> - 0.5-1
+- Added bodhi update ftpsync messages.
+- Reorganized the js to be easier to maintain.
+- Use fedora-bootstrap.
+
 * Sun Jan 19 2014 Ralph Bean <rbean@redhat.com> - 0.4-1
 - Added epelbeta messages
 - Removed branched messages
