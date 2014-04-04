@@ -8,7 +8,7 @@ $(document).ready(function() {
     }
 
     // A mapping of fedmsg topic fragments to DOM elements.
-    var selectors = {
+    var compose_selectors = {
         "org.fedoraproject.prod.compose.rawhide.mash": "#rawhide-mash",
         "org.fedoraproject.prod.compose.rawhide.pungify": "#rawhide-pungify",
         "org.fedoraproject.prod.compose.rawhide.rsync": "#rawhide-rsync",
@@ -29,7 +29,7 @@ $(document).ready(function() {
         "org.fedoraproject.prod.compose.epelbeta": "#epelbeta-compose",
     }
 
-    var artifacts = {
+    var artifact_selectors = {
         'appliance': '#appliance',
         'livecd': '#livecd',
     }
@@ -40,7 +40,7 @@ $(document).ready(function() {
         'appliance': ['x86_64', 'i386', 'armhfp'],
     }
 
-    var get_fedmsg_msg = function(topic, callback) {
+    var get_compose_msg = function(topic, callback) {
         var data = $.param({
             'delta': 3600000,
             'rows_per_page': 100,
@@ -64,9 +64,10 @@ $(document).ready(function() {
             }
         });
     };
-    var main_hollaback = function(data, topic, arch) {
+
+    var compose_hollaback = function(data, topic, arch) {
         var content;
-        var selector_prefix = selectors[topic];
+        var selector_prefix = compose_selectors[topic];
         var selector = selector_prefix + "-" + arch;
         var latest_msg_start, latest_msg_complete;
 
@@ -144,7 +145,7 @@ $(document).ready(function() {
         $(selector + " > p > .content").html(content);
     };
 
-    var get_fedmsg_tasks = function(artifact, callback) {
+    var get_artifact_msg = function(artifact, callback) {
         var data = $.param({
             'delta': 3600000,
             'rows_per_page': 100,
@@ -168,7 +169,7 @@ $(document).ready(function() {
         });
     }
     var task_hollaback = function(data, artifact) {
-        var selector_prefix = artifacts[artifact];
+        var selector_prefix = artifact_selectors[artifact];
         var seen = [];
         $.each(data.raw_messages, function(i, msg) {
             // We only want artifacts, not other people's scratch builds.
@@ -233,10 +234,10 @@ $(document).ready(function() {
     }
 
     // Kick off our on page load initialization.
-    $.each(selectors, function(topic, selector) {
-        get_fedmsg_msg(topic, main_hollaback);
+    $.each(compose_selectors, function(topic, selector) {
+        get_compose_msg(topic, compose_hollaback);
     });
-    $.each(artifacts, function(name, selector) {
-        get_fedmsg_tasks(name, task_hollaback);
+    $.each(artifact_selectors, function(name, selector) {
+        get_artifact_msg(name, task_hollaback);
     })
 });
