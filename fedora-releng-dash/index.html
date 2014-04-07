@@ -10,7 +10,7 @@
     <title>Fedora Release Engineering Dashboard</title>
 
     <link href="css/bootstrap.css" rel="stylesheet">
-    <link href="css/sticky-footer.css" rel="stylesheet">
+    <link href="css/site.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -32,14 +32,14 @@
         <p class="lead">Track the status of the Fedora Release Engineering process.</p>
         <div class="row">
             <div class="rawhide col-md-6">
-                <h3>Rawhide (primary)</h3>
+                <h3><a href="#rawhide-primary" id="rawhide-primary">Rawhide (primary)</a></h3>
                 <div id="rawhide-mash-"><p>Mash <span class="content">...</span>.</p></div>
                 <div id="rawhide-pungify-"><p>Pungify <span class="content">...</span>.</p></div>
                 <div id="rawhide-rsync-"><p>Rsync <span class="content">...</span>.</p></div>
                 <div id="rawhide-compose-"><p>Compose <span class="content">...</span>.</p></div>
             </div>
             <div class="rawhide col-md-6">
-                <h3>Rawhide (arm)</h3>
+                <h3><a href="#rawhide-arm" id="rawhide-arm">Rawhide (arm)</a></h3>
                 <div id="rawhide-mash-arm"><p>Mash <span class="content">...</span>.</p></div>
                 <div id="rawhide-pungify-arm"><p>Pungify <span class="content">...</span>.</p></div>
                 <div id="rawhide-rsync-arm"><p>Rsync <span class="content">...</span>.</p></div>
@@ -48,14 +48,14 @@
         </div>
         <div class="row">
             <div class="rawhide col-md-6">
-                <h3>Rawhide (ppc)</h3>
+                <h3><a href="#rawhide-ppc" id="rawhide-ppc">Rawhide (ppc)</a></h3>
                 <div id="rawhide-mash-ppc"><p>Mash <span class="content">...</span>.</p></div>
                 <div id="rawhide-pungify-ppc"><p>Pungify <span class="content">...</span>.</p></div>
                 <div id="rawhide-rsync-ppc"><p>Rsync <span class="content">...</span>.</p></div>
                 <div id="rawhide-compose-ppc"><p>Compose <span class="content">...</span>.</p></div>
             </div>
             <div class="rawhide col-md-6">
-                <h3>Rawhide (s390)</h3>
+                <h3><a href="#rawhide-s390" id="rawhide-s390">Rawhide (s390)</a></h3>
                 <div id="rawhide-mash-s390"><p>Mash <span class="content">...</span>.</p></div>
                 <div id="rawhide-pungify-s390"><p>Pungify <span class="content">...</span>.</p></div>
                 <div id="rawhide-rsync-s390"><p>Rsync <span class="content">...</span>.</p></div>
@@ -65,21 +65,21 @@
         <!-- we don't currently have a 'branched' branch.  Restore this in a few months..
         <div class="row">
             <div class="branched col-md-4">
-                <h3>Branched (primary)</h3>
+                <h3><a href="#branched-primary" id="branched-primary">Branched (primary)</a></h3>
                 <div id="branched-mash-"><p>Mash <span class="content">...</span>.</p></div>
                 <div id="branched-pungify-"><p>Pungify <span class="content">...</span>.</p></div>
                 <div id="branched-rsync-"><p>Rsync <span class="content">...</span>.</p></div>
                 <div id="branched-compose-"><p>Compose <span class="content">...</span>.</p></div>
             </div>
             <div class="branched col-md-4">
-                <h3>Branched (ppc)</h3>
+                <h3><a href="#branched-ppc" id="branched-ppc">Branched (ppc)</a></h3>
                 <div id="branched-mash-ppc"><p>Mash <span class="content">...</span>.</p></div>
                 <div id="branched-pungify-ppc"><p>Pungify <span class="content">...</span>.</p></div>
                 <div id="branched-rsync-ppc"><p>Rsync <span class="content">...</span>.</p></div>
                 <div id="branched-compose-ppc"><p>Compose <span class="content">...</span>.</p></div>
             </div>
             <div class="branched col-md-4">
-                <h3>Branched (s390)</h3>
+                <h3><a href="#branched-s390" id="branched-s390">Branched (s390)</a></h3>
                 <div id="branched-mash-s390"><p>Mash <span class="content">...</span>.</p></div>
                 <div id="branched-pungify-s390"><p>Pungify <span class="content">...</span>.</p></div>
                 <div id="branched-rsync-s390"><p>Rsync <span class="content">...</span>.</p></div>
@@ -90,7 +90,7 @@
 
         <div class="row">
             <div class="epelbeta col-md-6 col-md-offset-3">
-                <h3>epelbeta (primary)</h3>
+                <h3><a href="#epelbeta-primary" id="epelbeta-primary">epelbeta (primary)</a></h3>
                 <!-- for whatever reason, epelbeta compose doesn't have any of these messages.
                 <div id="epelbeta-mash-"><p>Mash <span class="content">...</span>.</p></div>
                 <div id="epelbeta-pungify-"><p>Pungify <span class="content">...</span>.</p></div>
@@ -102,7 +102,7 @@
 
         <div class="row">
             <div class="branched col-md-6">
-                <h3>Bodhi Updates (Fedora)</h3>
+                <h3><a href="#bodhi-fedora" id="bodhi-fedora">Bodhi Updates (Fedora)</a></h3>
                 <div id="updates-fedora">
                     <div id="updates-fedora-20-updates"><p>F20 Updates <span class="content">...</span>.</p></div>
                     <div id="updates-fedora-20-updates-testing"><p>F20 Testing <span class="content">...</span>.</p></div>
@@ -111,7 +111,7 @@
                 </div>
             </div>
             <div class="branched col-md-6">
-                <h3>Bodhi Updates (EPEL)</h3>
+                <h3><a href="#bodhi-epel" id="bodhi-epel">Bodhi Updates (EPEL)</a></h3>
                 <div id="updates-epel">
                     <div id="updates-epel-6-epel"><p>EL6 Updates <span class="content">...</span>.</p></div>
                     <div id="updates-epel-6-epel-testing"><p>EL6 Testing <span class="content">...</span>.</p></div>
@@ -123,14 +123,14 @@
 
         <div class="row">
             <div class="branched col-md-6">
-                <h3>LiveCD Builds</h3>
+                <h3><a href="#livecds" id="livecds">LiveCD Builds</a></h3>
                 <div id="livecd-container">
                     <div id="livecd-x86_64"><h4>x86_64</h4></div>
                     <div id="livecd-i686"><h4>i686</h4></div>
                 </div>
             </div>
             <div class="branched col-md-6">
-                <h3>Appliance Builds</h3>
+                <h3><a href="#appliances" id="appliances">Appliance Builds</a></h3>
                 <div id="appliance-container">
                     <div id="appliance-x86_64"><h4>x86_64</h4></div>
                     <div id="appliance-i386"><h4>i386</h4></div>
