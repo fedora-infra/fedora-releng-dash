@@ -60,6 +60,8 @@ $(document).ready(function() {
                 var result = info['result'].split(" ");
                 result = result[result.length - 1];
                 tokens = result.split('/');
+
+                // Let's be clear.. I don't know what this is.
                 var thing = tokens[5];
 
                 var r = info['request'];
