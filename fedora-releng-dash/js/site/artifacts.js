@@ -51,6 +51,40 @@ $(document).ready(function() {
                 }
             }
 
+            // If possible, construct a direct download link to the product of
+            // the livecd or appliance build.  This is pretty ugly.
+            var children = info['children'];
+            var SRPM = msg.msg.srpm;
+            if (msg.msg.new == 'CLOSED' && children != undefined && children.length == 1) {
+                var id = children[0]['id'];
+                var result = info['result'].split(" ");
+                result = result[result.length - 1];
+                tokens = result.split('/');
+
+                // Let's be clear.. I don't know what this is.
+                var thing = tokens[5];
+
+                var r = info['request'];
+                var opts = r[5];
+
+                var file = r[0] + "-" + r[1] + "-" + opts['release'];
+
+                if (opts['format'] === undefined) {
+                    file = file + ".iso";
+                } else if (opts['format'] == 'qcow2') {
+                    file = file + "-sda.qcow2";
+                } else if (opts['format'] == 'raw') {
+                    file = file + "-sda.raw.xz";
+                }
+
+                var base = "http://kojipkgs.fedoraproject.org/work/tasks/";
+
+                var download_link = base + thing + "/" + id + "/" + file;
+                "4886/6714886/Fedora-Live-LXDE-x86_64-rawhide-20140407.iso"
+
+                SRPM = "<a href='" + download_link + "'>" + SRPM + "</a>";
+            }
+
             // We only want to process srpms once.  Have seen already?
             if ($.inArray(msg.msg.srpm, seen) != -1) {
                 // Bail out
@@ -79,9 +113,10 @@ $(document).ready(function() {
                 // Because it is old and stale.
                 cls = 'text-muted';
             }
+
             $(selector).append(
                 "<p class='" + cls + "'>" +
-                msg.msg.srpm + " " +
+                SRPM + " " +
                 "</br>" +
                 "<small>" +
                 text_lookup[msg.msg.new] +" " +
