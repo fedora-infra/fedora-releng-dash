@@ -1,8 +1,7 @@
 $(document).ready(function() {
     // A mapping of fedmsg topic fragments to DOM elements.
     var selectors = {
-        'appliance': '#appliance',
-        'livecd': '#livecd',
+        'image': '#image',
     }
 
     var get_msg = function(artifact, callback) {
@@ -37,6 +36,15 @@ $(document).ready(function() {
                 return;
             }
 
+            // We only want to process srpms once.  Have seen already?
+            if ($.inArray(msg.msg.srpm, seen) != -1) {
+                // Bail out
+                return;
+            } else {
+                // Throw it in the array so we'll see it next time.
+                seen.push(msg.msg.srpm);
+            }
+
             var tokens = msg.msg.srpm.split('-');
             var arch = tokens[tokens.length - 1];
 
@@ -46,52 +54,6 @@ $(document).ready(function() {
             var info = msg.msg['info'];
             if (info != undefined) {
                 var options = info.request[info.request.length - 1];
-                if (options.format != undefined) {
-                    msg.msg.srpm = msg.msg.srpm + " (" + options.format + ")";
-                }
-            }
-
-            // If possible, construct a direct download link to the product of
-            // the livecd or appliance build.  This is pretty ugly.
-            var children = info['children'];
-            var SRPM = msg.msg.srpm;
-            if (msg.msg.new == 'CLOSED' && children != undefined && children.length == 1) {
-                var id = children[0]['id'];
-                var result = info['result'].split(" ");
-                result = result[result.length - 1];
-                tokens = result.split('/');
-
-                // Let's be clear.. I don't know what this is.
-                var thing = tokens[5];
-
-                var r = info['request'];
-                var opts = r[5];
-
-                var file = r[0] + "-" + r[1] + "-" + opts['release'];
-
-                if (opts['format'] === undefined) {
-                    file = file + ".iso";
-                } else if (opts['format'] == 'qcow2') {
-                    file = file + "-sda.qcow2";
-                } else if (opts['format'] == 'raw') {
-                    file = file + "-sda.raw.xz";
-                }
-
-                var base = "https://kojipkgs.fedoraproject.org/work/tasks/";
-
-                var download_link = base + thing + "/" + id + "/" + file;
-                "4886/6714886/Fedora-Live-LXDE-x86_64-rawhide-20140407.iso"
-
-                SRPM = "<a href='" + download_link + "'>" + SRPM + "</a>";
-            }
-
-            // We only want to process srpms once.  Have seen already?
-            if ($.inArray(msg.msg.srpm, seen) != -1) {
-                // Bail out
-                return;
-            } else {
-                // Throw it in the array so we'll see it next time.
-                seen.push(msg.msg.srpm);
             }
 
             var selector = selector_prefix + "-" + arch;
@@ -114,17 +76,61 @@ $(document).ready(function() {
                 cls = 'text-muted';
             }
 
-            $(selector).append(
-                "<p class='" + cls + "'>" +
+            var SRPM = msg.msg.srpm;
+            console.log(msg.msg);
+
+            html = "<p class='" + cls + "'>" +
                 SRPM + " " +
                 "</br>" +
                 "<small>" +
                 text_lookup[msg.msg.new] +" " +
                 time.fromNow() + " " +
-                "</small> " +
-                "<strong><a href='" + msg.meta.link + "'>(details)</a></strong>" +
-                "</p>"
-            );
+                "</small>" +
+                "<strong><a href='" + msg.meta.link + "'>(details)</a></strong>"
+
+            // If possible, construct a direct download link to the product of
+            // the image build.  This is pretty ugly.
+
+            if (msg.msg.new == 'CLOSED') {
+                var children = info['children'];
+                var result = info['result'].split(" ");
+                result = result[result.length - 1];
+                tokens = result.split('/');
+                var r = info['request'];
+                var opts = r[5];
+                var file = r[0] + "-" + r[1] + "-" + opts['release'];
+                var base = "https://kojipkgs.fedoraproject.org/work/tasks/";
+
+                // Let's be clear.. I don't know what this is.
+                var thing = tokens[5];
+                thing = parseInt(thing);
+
+                html = html + "<table class='table'>";
+                $.each(info.children, function(i, child) {
+                    console.log(child);
+                    html = html + "<tr>"
+                    $.each(options.format, function(j, format) {
+                        var id = child['id'];
+
+                        var folder = thing + "/" + id + "/";
+                        var product = file + "." + child.arch + "." + format;
+                        var download_link = base + folder + product;
+                        var link = "<a href='" + download_link + "'>" +
+                            child.arch + "." + format + "</a> ";
+
+                        html = html + "<td>" + link + "</td>";
+                    });
+                    html = html + "</tr>";
+
+                    // Forbidden magic
+                    thing = thing - 1;
+                });
+                html = html + "</table>";
+            }
+
+            html = html + "</p>";
+
+            $(selector).append(html);
         });
     }
 
