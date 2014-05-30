@@ -77,7 +77,7 @@ $(document).ready(function() {
                     file = file + "-sda.raw.xz";
                 }
 
-                var base = "http://kojipkgs.fedoraproject.org/work/tasks/";
+                var base = "https://kojipkgs.fedoraproject.org/work/tasks/";
 
                 var download_link = base + thing + "/" + id + "/" + file;
                 "4886/6714886/Fedora-Live-LXDE-x86_64-rawhide-20140407.iso"
