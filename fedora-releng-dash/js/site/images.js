@@ -10,7 +10,7 @@ $(document).ready(function() {
             'rows_per_page': 100,
             'order': 'desc',
             'meta': 'link',
-            'user': 'masher',
+            'user': 'ausil',
         });
         $.ajax({
             url: "https://apps.fedoraproject.org/datagrepper/raw/",
