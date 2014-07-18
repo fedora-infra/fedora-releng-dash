@@ -3,7 +3,7 @@
 # Enable negative glob
 shopt -s extglob
 
-VERSION=0.10
+VERSION=0.11
 
 rm -rf build
 mkdir -p build/fedora-releng-dash-$VERSION
