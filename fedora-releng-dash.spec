@@ -1,7 +1,7 @@
 %global prefix /srv/web
 
 Name:           fedora-releng-dash
-Version:        0.11
+Version:        0.12
 Release:        1%{?dist}
 Summary:        An HTML5 readonly dashboard for Fedora Release Engineering
 
@@ -37,6 +37,9 @@ cp -r %{name}/{index.html,assets,css,js} %{buildroot}/%{prefix}/%{name}/.
 %attr(755, httpd, httpd) %dir %{prefix}/%{name}/
 
 %changelog
+* Wed Aug 06 2014 Ralph Bean <rbean@redhat.com> - 0.12-1
+- Distinguish between rawhide and f21 for livecds.
+
 * Fri Jul 18 2014 Ralph Bean <rbean@redhat.com> - 0.11-1
 - Uncomment sections for 'branched' now that we have f21 composes.
 
