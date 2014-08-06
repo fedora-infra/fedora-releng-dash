@@ -49,6 +49,10 @@ $(document).ready(function() {
                 if (options.format != undefined) {
                     msg.msg.srpm = msg.msg.srpm + " (" + options.format + ")";
                 }
+                var branch = info.request[1];
+                if (branch != undefined) {
+                    msg.msg.srpm = msg.msg.srpm + " (" + branch + ")";
+                }
             }
 
             // If possible, construct a direct download link to the product of
@@ -94,7 +98,7 @@ $(document).ready(function() {
                 seen.push(msg.msg.srpm);
             }
 
-            var selector = selector_prefix + "-" + arch;
+            var selector = selector_prefix + "-" + branch + "-" + arch;
             var class_lookup = {
                 'CLOSED': 'text-primary',
                 'FAILED': 'text-danger',
