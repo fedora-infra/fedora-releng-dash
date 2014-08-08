@@ -36,15 +36,6 @@ $(document).ready(function() {
                 return;
             }
 
-            // We only want to process srpms once.  Have seen already?
-            if ($.inArray(msg.msg.srpm, seen) != -1) {
-                // Bail out
-                return;
-            } else {
-                // Throw it in the array so we'll see it next time.
-                seen.push(msg.msg.srpm);
-            }
-
             var tokens = msg.msg.srpm.split('-');
             var arch = tokens[tokens.length - 1];
 
@@ -54,9 +45,23 @@ $(document).ready(function() {
             var info = msg.msg['info'];
             if (info != undefined) {
                 var options = info.request[info.request.length - 1];
+
+                var branch = info.request[5].release;
+                if (branch != undefined) {
+                    msg.msg.srpm = msg.msg.srpm + " (" + branch + ")";
+                }
             }
 
-            var selector = selector_prefix + "-" + arch;
+            // We only want to process srpms once.  Have seen already?
+            if ($.inArray(msg.msg.srpm, seen) != -1) {
+                // Bail out
+                return;
+            } else {
+                // Throw it in the array so we'll see it next time.
+                seen.push(msg.msg.srpm);
+            }
+
+            var selector = selector_prefix + "-" + branch + "-" + arch;
             var class_lookup = {
                 'CLOSED': 'text-primary',
                 'FAILED': 'text-danger',
@@ -77,7 +82,6 @@ $(document).ready(function() {
             }
 
             var SRPM = msg.msg.srpm;
-            console.log(msg.msg);
 
             html = "<p class='" + cls + "'>" +
                 SRPM + " " +
@@ -107,7 +111,6 @@ $(document).ready(function() {
 
                 html = html + "<table class='table'>";
                 $.each(info.children, function(i, child) {
-                    console.log(child);
                     html = html + "<tr>"
                     $.each(options.format, function(j, format) {
                         var id = child['id'];
