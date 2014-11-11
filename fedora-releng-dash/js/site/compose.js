@@ -10,13 +10,6 @@ $(document).ready(function() {
         "org.fedoraproject.prod.compose.branched.pungify": "#branched-pungify",
         "org.fedoraproject.prod.compose.branched.rsync": "#branched-rsync",
         "org.fedoraproject.prod.compose.branched": "#branched-compose",
-
-        /* For whatever reason, epelbeta doesn't have these messages..
-        "org.fedoraproject.prod.compose.epelbeta.mash": "#epelbeta-mash",
-        "org.fedoraproject.prod.compose.epelbeta.pungify": "#epelbeta-pungify",
-        "org.fedoraproject.prod.compose.epelbeta.rsync": "#epelbeta-rsync",
-        */
-        "org.fedoraproject.prod.compose.epelbeta": "#epelbeta-compose",
     }
 
     var architectures = ["", "arm", "ppc", "s390"];
