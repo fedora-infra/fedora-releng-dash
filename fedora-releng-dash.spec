@@ -1,7 +1,7 @@
 %global prefix /srv/web
 
 Name:           fedora-releng-dash
-Version:        0.13
+Version:        0.14
 Release:        1%{?dist}
 Summary:        An HTML5 readonly dashboard for Fedora Release Engineering
 
