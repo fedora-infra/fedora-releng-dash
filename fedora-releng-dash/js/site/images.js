@@ -11,6 +11,8 @@ $(document).ready(function() {
             'order': 'desc',
             'meta': 'link',
             'user': 'masher',
+            'topic': 'org.fedoraproject.prod.buildsys.task.state.change',
+            'contains': 'createImage',
         });
         $.ajax({
             url: "https://apps.fedoraproject.org/datagrepper/raw/",
@@ -37,7 +39,7 @@ $(document).ready(function() {
             }
 
             var tokens = msg.msg.srpm.split('-');
-            var arch = tokens[tokens.length - 1];
+            var arch = tokens[tokens.length - 1].toLowerCase();
 
             // Some of the appliance builds come in different formats.
             // Here we mangle the "srpm" name so that we can distinguish them.
@@ -113,6 +115,10 @@ $(document).ready(function() {
                 $.each(info.children, function(i, child) {
                     html = html + "<tr>"
                     $.each(options.format, function(j, format) {
+
+                        // The old switch-a-roo, huh?
+                        if (format == 'raw-xz') { format = 'raw.xz'; }
+
                         var id = child['id'];
 
                         var folder = thing + "/" + id + "/";
