@@ -115,6 +115,10 @@ $(document).ready(function() {
                 $.each(info.children, function(i, child) {
                     html = html + "<tr>"
                     $.each(options.format, function(j, format) {
+
+                        // The old switch-a-roo, huh?
+                        if (format == 'raw-xz') { format = 'raw.xz'; }
+
                         var id = child['id'];
 
                         var folder = thing + "/" + id + "/";
