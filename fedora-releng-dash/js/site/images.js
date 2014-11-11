@@ -37,7 +37,7 @@ $(document).ready(function() {
             }
 
             var tokens = msg.msg.srpm.split('-');
-            var arch = tokens[tokens.length - 1];
+            var arch = tokens[tokens.length - 1].toLowerCase();
 
             // Some of the appliance builds come in different formats.
             // Here we mangle the "srpm" name so that we can distinguish them.
