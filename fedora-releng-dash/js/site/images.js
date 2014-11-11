@@ -11,6 +11,8 @@ $(document).ready(function() {
             'order': 'desc',
             'meta': 'link',
             'user': 'masher',
+            'topic': 'org.fedoraproject.prod.buildsys.task.state.change',
+            'contains': 'createImage',
         });
         $.ajax({
             url: "https://apps.fedoraproject.org/datagrepper/raw/",
