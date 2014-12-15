@@ -6,10 +6,10 @@ $(document).ready(function() {
         "org.fedoraproject.prod.compose.rawhide.rsync": "#rawhide-rsync",
         "org.fedoraproject.prod.compose.rawhide": "#rawhide-compose",
 
-        "org.fedoraproject.prod.compose.branched.mash": "#branched-mash",
-        "org.fedoraproject.prod.compose.branched.pungify": "#branched-pungify",
-        "org.fedoraproject.prod.compose.branched.rsync": "#branched-rsync",
-        "org.fedoraproject.prod.compose.branched": "#branched-compose",
+        //"org.fedoraproject.prod.compose.branched.mash": "#branched-mash",
+        //"org.fedoraproject.prod.compose.branched.pungify": "#branched-pungify",
+        //"org.fedoraproject.prod.compose.branched.rsync": "#branched-rsync",
+        //"org.fedoraproject.prod.compose.branched": "#branched-compose",
     }
 
     var architectures = ["", "arm", "ppc", "s390"];
