@@ -8,7 +8,7 @@ $(document).ready(function() {
     var get_msg = function(product, callback) {
         var topic = topic_prefix + '.updates.' + product + '.sync';
         var data = $.param({
-            'delta': 3600000,
+            'delta': 2000000,  // 23 days
             'rows_per_page': 100,
             'order': 'desc',
             'meta': 'link',
