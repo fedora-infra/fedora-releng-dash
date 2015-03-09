@@ -41,6 +41,7 @@ $(document).ready(function() {
             var tokens = msg.msg.image_name.split('.')[0].split('-');
             var flavour = tokens[2].toLowerCase();
             var version = tokens[3].toLowerCase();
+            var ec2Region = msg.msg.destination.split('(')[1].slice(0, -1);
             // We only want to process srpms once.  Have seen already?
             if ($.inArray(msg.msg.image_name, seen) != -1) {
                 // Bail out
@@ -64,6 +65,11 @@ $(document).ready(function() {
                 // Because it is old and stale.
                 cls = 'text-muted';
             }
+            var amiLink = "https://redirect.fedoraproject.org/console.aws." +
+                          "amazon.com/ec2/v2/home?region=" +
+                          ec2Region +
+                          "#LaunchInstanceWizard:ami=" +
+                          msg.msg.extra.id;
 
             html = "<p class='" + cls + "'>" +
                 msg.msg.image_name + " " +
@@ -72,9 +78,9 @@ $(document).ready(function() {
                 msg.msg.status +" " +
                 time.fromNow() + " " +
                 "</small><br/>" +
-                "on <strong>" +
+                "on <a href=\"" + amiLink + "\"><strong>" +
                 msg.msg.extra.id + ", " + msg.msg.destination +
-                "</strong></p>";
+                "</strong></a></p>";
 
             selector = selector_prefix + "-" + flavour;
             $(selector).append(html);
