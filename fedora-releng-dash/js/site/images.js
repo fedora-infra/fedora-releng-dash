@@ -1,8 +1,14 @@
 $(document).ready(function() {
     // A mapping of fedmsg topic fragments to DOM elements.
     var selectors = {
-        'image': '#image',
+        'image-upload': '#image-upload',
+        // Disabling widget for showing Cloud Images test builds
+        // 'image-test': '#image-test'
     }
+    var topics = {
+      'image-upload': 'org.fedoraproject.prod.fedimg.image.upload',
+      'image-test': 'org.fedoraproject.prod.fedimg.image.test'
+    };
 
     var get_msg = function(artifact, callback) {
         var data = $.param({
@@ -10,9 +16,8 @@ $(document).ready(function() {
             'rows_per_page': 100,
             'order': 'desc',
             'meta': 'link',
-            'user': 'masher',
-            'topic': 'org.fedoraproject.prod.buildsys.task.state.change',
-            'contains': 'createImage',
+            'topic': topics[artifact],
+            'contains': 'completed',
         });
         $.ajax({
             url: "https://apps.fedoraproject.org/datagrepper/raw/",
@@ -33,112 +38,52 @@ $(document).ready(function() {
         var selector_prefix = selectors[artifact];
         var seen = [];
         $.each(data.raw_messages, function(i, msg) {
-            // We only want artifacts, not other people's scratch builds.
-            if (msg.msg.method != artifact) {
-                return;
-            }
-
-            var tokens = msg.msg.srpm.split('-');
-            var arch = tokens[tokens.length - 1].toLowerCase();
-
-            // Some of the appliance builds come in different formats.
-            // Here we mangle the "srpm" name so that we can distinguish them.
-            // Not all tasks have this info, so we have to proceed carefully.
-            var info = msg.msg['info'];
-            if (info != undefined) {
-                var options = info.request[info.request.length - 1];
-
-                var branch = info.request[5].release;
-                if (branch != undefined) {
-                    msg.msg.srpm = msg.msg.srpm + " (" + branch + ")";
-                }
-            }
-
+            var arch = msg.msg.image_name.split('.')[1];
+            var tokens = msg.msg.image_name.split('.')[0].split('-');
+            var flavour = tokens[2].toLowerCase();
+            var version = tokens[3].toLowerCase();
+            var ec2Region = msg.msg.destination.split('(')[1].slice(0, -1);
             // We only want to process srpms once.  Have seen already?
-            if ($.inArray(msg.msg.srpm, seen) != -1) {
+            if ($.inArray(msg.msg.image_name, seen) != -1) {
                 // Bail out
                 return;
             } else {
                 // Throw it in the array so we'll see it next time.
-                seen.push(msg.msg.srpm);
+                seen.push(msg.msg.image_name);
             }
 
-            var selector = selector_prefix + "-" + branch + "-" + arch;
+            //var selector = selector_prefix + "-" + branch + "-" + arch;
             var class_lookup = {
-                'CLOSED': 'text-primary',
-                'FAILED': 'text-danger',
-                'OPEN': 'text-warning',
-            }
-            var text_lookup = {
-                'CLOSED': 'completed',
-                'FAILED': 'failed',
-                'OPEN': 'started',
+                'completed': 'text-primary',
+                'failed': 'text-danger',
+                'started': 'text-warning',
             }
             var now = moment();
             var one_day_ago = now.subtract('hours', 24);
             var time = moment(msg.timestamp.toString(), '%X');
-            var cls = class_lookup[msg.msg.new];
+            var cls = class_lookup[msg.msg.status];
             if (time.isBefore(one_day_ago)) {
                 // Because it is old and stale.
                 cls = 'text-muted';
             }
-
-            var SRPM = msg.msg.srpm;
+            var amiLink = "https://redirect.fedoraproject.org/console.aws." +
+                          "amazon.com/ec2/v2/home?region=" +
+                          ec2Region +
+                          "#LaunchInstanceWizard:ami=" +
+                          msg.msg.extra.id;
 
             html = "<p class='" + cls + "'>" +
-                SRPM + " " +
+                msg.msg.image_name + " " +
                 "</br>" +
                 "<small>" +
-                text_lookup[msg.msg.new] +" " +
+                msg.msg.status +" " +
                 time.fromNow() + " " +
-                "</small>" +
-                "<strong><a href='" + msg.meta.link + "'>(details)</a></strong>"
+                "</small><br/>" +
+                "on <a href=\"" + amiLink + "\"><strong>" +
+                msg.msg.extra.id + ", " + msg.msg.destination +
+                "</strong></a></p>";
 
-            // If possible, construct a direct download link to the product of
-            // the image build.  This is pretty ugly.
-
-            if (msg.msg.new == 'CLOSED') {
-                var children = info['children'];
-                var result = info['result'].split(" ");
-                result = result[result.length - 1];
-                tokens = result.split('/');
-                var r = info['request'];
-                var opts = r[5];
-                var file = r[0] + "-" + r[1] + "-" + opts['release'];
-                var base = "https://kojipkgs.fedoraproject.org/work/tasks/";
-
-                // Let's be clear.. I don't know what this is.
-                var thing = tokens[5];
-                thing = parseInt(thing);
-
-                html = html + "<table class='table'>";
-                $.each(info.children, function(i, child) {
-                    html = html + "<tr>"
-                    $.each(options.format, function(j, format) {
-
-                        // The old switch-a-roo, huh?
-                        if (format == 'raw-xz') { format = 'raw.xz'; }
-
-                        var id = child['id'];
-
-                        var folder = thing + "/" + id + "/";
-                        var product = file + "." + child.arch + "." + format;
-                        var download_link = base + folder + product;
-                        var link = "<a href='" + download_link + "'>" +
-                            child.arch + "." + format + "</a> ";
-
-                        html = html + "<td>" + link + "</td>";
-                    });
-                    html = html + "</tr>";
-
-                    // Forbidden magic
-                    thing = thing - 1;
-                });
-                html = html + "</table>";
-            }
-
-            html = html + "</p>";
-
+            selector = selector_prefix + "-" + flavour;
             $(selector).append(html);
         });
     }
