@@ -2,7 +2,8 @@ $(document).ready(function() {
     // A mapping of fedmsg topic fragments to DOM elements.
     var selectors = {
         'image-upload': '#image-upload',
-        'image-test': '#image-test'
+        // Disabling widget for showing Cloud Images test builds
+        // 'image-test': '#image-test'
     }
     var topics = {
       'image-upload': 'org.fedoraproject.prod.fedimg.image.upload',
