@@ -43,6 +43,14 @@ $(document).ready(function() {
             var flavour = tokens[2].toLowerCase();
             var version = tokens[3].toLowerCase();
             var ec2Region = msg.msg.destination.split('(')[1].slice(0, -1);
+
+            var branch = version;
+            if (branch != 'rawhide' && collections.dev.length > 1) {
+                if (branch == collections.dev[1].version) {
+                    branch = 'branched';
+                }
+            }
+
             // We only want to process srpms once.  Have seen already?
             if ($.inArray(msg.msg.image_name, seen) != -1) {
                 // Bail out
@@ -52,7 +60,6 @@ $(document).ready(function() {
                 seen.push(msg.msg.image_name);
             }
 
-            //var selector = selector_prefix + "-" + branch + "-" + arch;
             var class_lookup = {
                 'completed': 'text-primary',
                 'failed': 'text-danger',
@@ -83,7 +90,7 @@ $(document).ready(function() {
                 msg.msg.extra.id + ", " + msg.msg.destination +
                 "</strong></a></p>";
 
-            selector = selector_prefix + "-" + flavour;
+            selector = selector_prefix + "-" + flavour + "-" + branch;
             $(selector).append(html);
         });
     }
