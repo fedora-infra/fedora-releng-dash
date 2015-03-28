@@ -30,6 +30,11 @@ $.ajax({
         // Rename this for niceness.
         collections.dev = collections['under development'];
 
+        // If we're branched, then show branched elements.
+        if (collections.dev.length > 1) {
+            $('.branched').removeClass('hidden');
+        }
+
         // Now, kick off all of our other scripts.
         initialize();
     },

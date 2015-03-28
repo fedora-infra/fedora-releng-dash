@@ -17,7 +17,6 @@ $(document).ready(function() {
     // If just one is present, then it is rawhide.
     // If two are present, then we are currently branched.  so show it.
     if (collections.dev.length > 1) {
-        $('.row.branched').removeClass('hidden');
         $.each(branched_selectors, function(key, value) {
             selectors[key] = branched_selectors[key];
         });
