@@ -37,12 +37,18 @@ $(document).ready(function() {
     var hollaback = function(data, artifact) {
         var selector_prefix = selectors[artifact];
         var seen = [];
+        var latest = {
+            rawhide: null,
+            branched: null,
+        };
         $.each(data.raw_messages, function(i, msg) {
             var arch = msg.msg.image_name.split('.')[1];
             var tokens = msg.msg.image_name.split('.')[0].split('-');
             var flavour = tokens[2].toLowerCase();
             var version = tokens[3].toLowerCase();
-            var ec2Region = msg.msg.destination.split('(')[1].slice(0, -1);
+            var tstamp = tokens[4];
+            var ec2_region = msg.msg.destination.split('(')[1].slice(0, -1);
+
 
             var branch = version;
             if (branch != 'rawhide' && collections.dev.length > 1) {
@@ -51,13 +57,16 @@ $(document).ready(function() {
                 }
             }
 
-            // We only want to process srpms once.  Have seen already?
-            if ($.inArray(msg.msg.image_name, seen) != -1) {
+            if (latest[branch] == null) { latest[branch] = tstamp; }
+            if (tstamp < latest[branch]) { return; }
+
+            // We only want to process AMIs once.  Have seen already?
+            if ($.inArray(msg.msg.image_name + ec2_region, seen) != -1) {
                 // Bail out
                 return;
             } else {
                 // Throw it in the array so we'll see it next time.
-                seen.push(msg.msg.image_name);
+                seen.push(msg.msg.image_name + ec2_region);
             }
 
             var class_lookup = {
@@ -75,7 +84,7 @@ $(document).ready(function() {
             }
             var amiLink = "https://redirect.fedoraproject.org/console.aws." +
                           "amazon.com/ec2/v2/home?region=" +
-                          ec2Region +
+                          ec2_region +
                           "#LaunchInstanceWizard:ami=" +
                           msg.msg.extra.id;
 
@@ -85,10 +94,9 @@ $(document).ready(function() {
                 "<small>" +
                 msg.msg.status +" " +
                 time.fromNow() + " " +
-                "</small><br/>" +
-                "on <a href=\"" + amiLink + "\"><strong>" +
-                msg.msg.extra.id + ", " + msg.msg.destination +
-                "</strong></a></p>";
+                "</small>" +
+                "<a href=\"" + amiLink + "\">" +
+                msg.msg.destination + "</a></p>";
 
             selector = selector_prefix + "-" + flavour + "-" + branch;
             $(selector).append(html);
