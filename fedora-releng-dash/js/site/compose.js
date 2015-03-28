@@ -5,11 +5,22 @@ $(document).ready(function() {
         "org.fedoraproject.prod.compose.rawhide.pungify": "#rawhide-pungify",
         "org.fedoraproject.prod.compose.rawhide.rsync": "#rawhide-rsync",
         "org.fedoraproject.prod.compose.rawhide": "#rawhide-compose",
+    };
 
-        //"org.fedoraproject.prod.compose.branched.mash": "#branched-mash",
-        //"org.fedoraproject.prod.compose.branched.pungify": "#branched-pungify",
-        //"org.fedoraproject.prod.compose.branched.rsync": "#branched-rsync",
-        //"org.fedoraproject.prod.compose.branched": "#branched-compose",
+    var branched_selectors = {
+        "org.fedoraproject.prod.compose.branched.mash": "#branched-mash",
+        "org.fedoraproject.prod.compose.branched.pungify": "#branched-pungify",
+        "org.fedoraproject.prod.compose.branched.rsync": "#branched-rsync",
+        "org.fedoraproject.prod.compose.branched": "#branched-compose",
+    };
+
+    // If just one is present, then it is rawhide.
+    // If two are present, then we are currently branched.  so show it.
+    if (collections.dev.length > 1) {
+        $('.row.branched').removeClass('hidden');
+        $.each(branched_selectors, function(key, value) {
+            selectors[key] = branched_selectors[key];
+        });
     }
 
     var architectures = ["", "arm", "ppc", "s390"];
