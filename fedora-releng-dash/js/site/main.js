@@ -11,6 +11,7 @@ var initialize = function() {
         'js/site/updates.js',
         'js/site/artifacts.js',
         'js/site/images.js',
+        'js/site/amis.js',
     ];
     $.each(urls, function(i, url) { $.getScript(url); });
 };
