@@ -4,6 +4,31 @@ $(document).ready(function() {
         'fedora': '#updates-fedora',
         'epel': '#updates-epel',
     }
+
+    $.each(collections.active, function(i, collection){
+        var v = collection.version;
+        if (collection.name == 'Fedora') {
+            $('#updates-fedora').append(
+                "<div id='updates-fedora-" + v + "-updates'>" +
+                "<p>F" + v + " Updates " +
+                "<span class='content'>...</span>.</p></div>");
+            $('#updates-fedora').append(
+                "<div id='updates-fedora-" + v + "-updates-testing'>" +
+                "<p>F" + v + " Testing " +
+                "<span class='content'>...</span>.</p></div>");
+        } else if (collection.name == 'Fedora EPEL') {
+            $('#updates-epel').append(
+                "<div id='updates-epel-" + v + "-epel'>" +
+                "<p>EL" + v + " Updates " +
+                "<span class='content'>...</span>.</p></div>");
+            $('#updates-epel').append(
+                "<div id='updates-epel-" + v + "-epel-testing'>" +
+                "<p>EL" + v + " Testing " +
+                "<span class='content'>...</span>.</p></div>");
+        }
+
+    });
+
     var topic_prefix = 'org.fedoraproject.prod.bodhi';
     var get_msg = function(product, callback) {
         var topic = topic_prefix + '.updates.' + product + '.sync';
