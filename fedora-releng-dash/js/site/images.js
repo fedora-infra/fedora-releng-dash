@@ -6,7 +6,7 @@ $(document).ready(function() {
 
     var get_msg = function(artifact, callback) {
         var data = $.param({
-            'delta': 3600000,
+            'delta': 2000000,  // 23 days
             'rows_per_page': 100,
             'order': 'desc',
             'meta': 'link',
@@ -39,18 +39,23 @@ $(document).ready(function() {
             }
 
             var tokens = msg.msg.srpm.split('-');
-            var arch = tokens[tokens.length - 1].toLowerCase();
 
             // Some of the appliance builds come in different formats.
             // Here we mangle the "srpm" name so that we can distinguish them.
             // Not all tasks have this info, so we have to proceed carefully.
             var info = msg.msg['info'];
-            if (info != undefined) {
-                var options = info.request[info.request.length - 1];
+            if (info == undefined) {
+                return;
+            }
 
-                var branch = info.request[5].release;
-                if (branch != undefined) {
-                    msg.msg.srpm = msg.msg.srpm + " (" + branch + ")";
+            var branch = info.request[1];
+            var options = info.request[5];
+            var srpm = msg.msg.srpm;
+            msg.msg.srpm = msg.msg.srpm + " (" + branch + ")";
+
+            if (branch != 'rawhide' && collections.dev.length > 1) {
+                if (branch == collections.dev[1].version) {
+                    branch = 'branched';
                 }
             }
 
@@ -63,7 +68,7 @@ $(document).ready(function() {
                 seen.push(msg.msg.srpm);
             }
 
-            var selector = selector_prefix + "-" + branch + "-" + arch;
+            var selector = selector_prefix + "-" + srpm.toLowerCase() + "-" + branch;
             var class_lookup = {
                 'CLOSED': 'text-primary',
                 'FAILED': 'text-danger',
@@ -83,16 +88,15 @@ $(document).ready(function() {
                 cls = 'text-muted';
             }
 
-            var SRPM = msg.msg.srpm;
-
             html = "<p class='" + cls + "'>" +
-                SRPM + " " +
+                msg.msg.srpm + " " +
                 "</br>" +
                 "<small>" +
                 text_lookup[msg.msg.new] +" " +
                 time.fromNow() + " " +
                 "</small>" +
-                "<strong><a href='" + msg.meta.link + "'>(details)</a></strong>"
+                "<strong><a href='" + msg.meta.link + "'>(details)" +
+                "</a></strong>";
 
             // If possible, construct a direct download link to the product of
             // the image build.  This is pretty ugly.
@@ -117,7 +121,16 @@ $(document).ready(function() {
                     $.each(options.format, function(j, format) {
 
                         // The old switch-a-roo, huh?
-                        if (format == 'raw-xz') { format = 'raw.xz'; }
+                        if (format == 'raw-xz') format = 'raw.xz';
+                        if (format == 'docker') format = 'tar.xz';
+                        if (format == 'rhevm-ova') format = 'rhevm.ova';
+                        if (format == 'vsphere-ova') format = 'vsphere.ova';
+
+                        if (format == 'vsphere.ova' || format == 'rhevm.ova') {
+                            format_text = format.split('.')[0];
+                        } else {
+                            format_text = child.arch + "." + format;
+                        }
 
                         var id = child['id'];
 
@@ -125,7 +138,7 @@ $(document).ready(function() {
                         var product = file + "." + child.arch + "." + format;
                         var download_link = base + folder + product;
                         var link = "<a href='" + download_link + "'>" +
-                            child.arch + "." + format + "</a> ";
+                            format_text + "</a> ";
 
                         html = html + "<td>" + link + "</td>";
                     });
@@ -146,5 +159,5 @@ $(document).ready(function() {
     // Kick off our on page load initialization.
     $.each(selectors, function(name, selector) {
         get_msg(name, hollaback);
-    })
+    });
 });

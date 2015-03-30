@@ -7,7 +7,7 @@ $(document).ready(function() {
 
     var get_msg = function(artifact, callback) {
         var data = $.param({
-            'delta': 3600000,
+            'delta': 2000000,  // 23 days
             'rows_per_page': 100,
             'order': 'desc',
             'meta': 'link',
@@ -50,6 +50,9 @@ $(document).ready(function() {
                     msg.msg.srpm = msg.msg.srpm + " (" + options.format + ")";
                 }
                 var branch = info.request[1];
+                if (branch != 'rawhide') {
+                    branch = 'branched';
+                }
                 if (branch != undefined) {
                     msg.msg.srpm = msg.msg.srpm + " (" + branch + ")";
                 }
@@ -84,7 +87,7 @@ $(document).ready(function() {
                 var base = "https://kojipkgs.fedoraproject.org/work/tasks/";
 
                 var download_link = base + thing + "/" + id + "/" + file;
-                "4886/6714886/Fedora-Live-LXDE-x86_64-rawhide-20140407.iso"
+                //"4886/6714886/Fedora-Live-LXDE-x86_64-rawhide-20140407.iso"
 
                 SRPM = "<a href='" + download_link + "'>" + SRPM + "</a>";
             }

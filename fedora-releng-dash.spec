@@ -1,7 +1,7 @@
 %global prefix /srv/web
 
 Name:           fedora-releng-dash
-Version:        0.15
+Version:        1.0
 Release:        1%{?dist}
 Summary:        An HTML5 readonly dashboard for Fedora Release Engineering
 
@@ -37,6 +37,11 @@ cp -r %{name}/{index.html,assets,css,js} %{buildroot}/%{prefix}/%{name}/.
 %attr(755, httpd, httpd) %dir %{prefix}/%{name}/
 
 %changelog
+* Mon Mar 30 2015 Ralph Bean <rbean@redhat.com> - 1.0-1
+- Query pkgdb to figure out the branched/active status.
+- Show AMIs and cloud images both
+- Add vagrant and docker images.
+
 * Mon Dec 15 2014 Ralph Bean <rbean@redhat.com> - 0.15-1
 - Removed branched/f21 now that f21 is out the door.
 
