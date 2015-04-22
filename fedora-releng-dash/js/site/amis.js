@@ -12,7 +12,7 @@ $(document).ready(function() {
 
     var get_msg = function(artifact, callback) {
         var data = $.param({
-            'delta': 2000000,  // 23 days
+            'delta': 31536000, // 1 year
             'rows_per_page': 100,
             'order': 'desc',
             'meta': 'link',
