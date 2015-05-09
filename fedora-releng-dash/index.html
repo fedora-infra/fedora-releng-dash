@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="The Fedora Release Engineering Dashboard">
     <meta name="author" content="Ralph Bean">
-    <script src="js/pace.min.js"></script>
     <link href="css/pace.css" rel="stylesheet">
     <link rel="shortcut icon" href="assets/ico/favicon.ico">
 
@@ -32,169 +31,8 @@
             <h1>Fedora Release Engineering Dashboard</h1>
         </div>
         <p class="lead">Track the status of the Fedora Release Engineering process.</p>
-        <div class="row">
-            <div class="col-md-6">
-                <h3><a href="#rawhide-primary" id="rawhide-primary">Rawhide Compose (primary)</a></h3>
-                <div id="rawhide-mash-"><p>Mash <span class="content">...</span>.</p></div>
-                <div id="rawhide-pungify-"><p>Pungify <span class="content">...</span>.</p></div>
-                <div id="rawhide-rsync-"><p>Rsync <span class="content">...</span>.</p></div>
-                <div id="rawhide-compose-"><p>Compose <span class="content">...</span>.</p></div>
-            </div>
-            <div class="col-md-6">
-                <h3><a href="#rawhide-arm" id="rawhide-arm">Rawhide Compose (arm)</a></h3>
-                <div id="rawhide-mash-arm"><p>Mash <span class="content">...</span>.</p></div>
-                <div id="rawhide-pungify-arm"><p>Pungify <span class="content">...</span>.</p></div>
-                <div id="rawhide-rsync-arm"><p>Rsync <span class="content">...</span>.</p></div>
-                <div id="rawhide-compose-arm"><p>Compose <span class="content">...</span>.</p></div>
-            </div>
+        <div id="widgets-container">
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <h3><a href="#rawhide-ppc" id="rawhide-ppc">Rawhide Compose (ppc)</a></h3>
-                <div id="rawhide-mash-ppc"><p>Mash <span class="content">...</span>.</p></div>
-                <div id="rawhide-pungify-ppc"><p>Pungify <span class="content">...</span>.</p></div>
-                <div id="rawhide-rsync-ppc"><p>Rsync <span class="content">...</span>.</p></div>
-                <div id="rawhide-compose-ppc"><p>Compose <span class="content">...</span>.</p></div>
-            </div>
-            <div class="col-md-6">
-                <h3><a href="#rawhide-s390" id="rawhide-s390">Rawhide Compose (s390)</a></h3>
-                <div id="rawhide-mash-s390"><p>Mash <span class="content">...</span>.</p></div>
-                <div id="rawhide-pungify-s390"><p>Pungify <span class="content">...</span>.</p></div>
-                <div id="rawhide-rsync-s390"><p>Rsync <span class="content">...</span>.</p></div>
-                <div id="rawhide-compose-s390"><p>Compose <span class="content">...</span>.</p></div>
-            </div>
-        </div>
-
-        <div class="row branched hidden">
-            <div class="col-md-6">
-                <h3><a href="#branched-primary" id="branched-primary">Branched Compose (primary)</a></h3>
-                <div id="branched-mash-"><p>Mash <span class="content">...</span>.</p></div>
-                <div id="branched-pungify-"><p>Pungify <span class="content">...</span>.</p></div>
-                <div id="branched-rsync-"><p>Rsync <span class="content">...</span>.</p></div>
-                <div id="branched-compose-"><p>Compose <span class="content">...</span>.</p></div>
-            </div>
-            <div class="col-md-6">
-                <h3><a href="#branched-arm" id="branched-arm">Branched Compose (arm)</a></h3>
-                <div id="branched-mash-"><p>Mash <span class="content">...</span>.</p></div>
-                <div id="branched-pungify-"><p>Pungify <span class="content">...</span>.</p></div>
-                <div id="branched-rsync-"><p>Rsync <span class="content">...</span>.</p></div>
-                <div id="branched-compose-"><p>Compose <span class="content">...</span>.</p></div>
-            </div>
-        </div>
-        <div class="row branched hidden">
-            <div class="col-md-6">
-                <h3><a href="#branched-ppc" id="branched-ppc">Branched Compose (ppc)</a></h3>
-                <div id="branched-mash-ppc"><p>Mash <span class="content">...</span>.</p></div>
-                <div id="branched-pungify-ppc"><p>Pungify <span class="content">...</span>.</p></div>
-                <div id="branched-rsync-ppc"><p>Rsync <span class="content">...</span>.</p></div>
-                <div id="branched-compose-ppc"><p>Compose <span class="content">...</span>.</p></div>
-            </div>
-            <div class="col-md-6">
-                <h3><a href="#branched-s390" id="branched-s390">Branched Compose (s390)</a></h3>
-                <div id="branched-mash-s390"><p>Mash <span class="content">...</span>.</p></div>
-                <div id="branched-pungify-s390"><p>Pungify <span class="content">...</span>.</p></div>
-                <div id="branched-rsync-s390"><p>Rsync <span class="content">...</span>.</p></div>
-                <div id="branched-compose-s390"><p>Compose <span class="content">...</span>.</p></div>
-            </div>
-        </div>
-
-        <hr></hr>
-
-        <div class="row">
-            <div class="col-md-6">
-                <h3><a href="#bodhi-fedora" id="bodhi-fedora">Repo Updates (Fedora)</a></h3>
-                <div id="updates-fedora">
-                  <!-- This is dynamically filled out... -->
-                </div>
-            </div>
-            <div class="col-md-6">
-                <h3><a href="#bodhi-epel" id="bodhi-epel">Repo Updates (EPEL)</a></h3>
-                <div id="updates-epel">
-                  <!-- This is dynamically filled out... -->
-                </div>
-            </div>
-        </div>
-
-        <hr></hr>
-
-        <div class="row">
-            <div class="col-md-6 col-md-offset-3">
-                <h3><a href="#image-rawhide" id="image-rawhide">Images (rawhide)</a></h3>
-                <div id="image-rawhide-container">
-                    <div id="image-fedora-cloud-base-rawhide"></div>
-                    <div id="image-fedora-cloud-atomic-rawhide"></div>
-                    <div id="image-fedora-cloud-atomic-vagrant-rawhide"></div>
-                    <div id="image-fedora-docker-base-rawhide"></div>
-                </div>
-            </div>
-            <div class="col-md-6 branched hidden">
-                <h3><a href="#image-branched" id="image-branched">Images (branched)</a></h3>
-                <div id="image-branched-container">
-                    <div id="image-fedora-cloud-base-branched"></div>
-                    <div id="image-fedora-cloud-atomic-branched"></div>
-                    <div id="image-fedora-cloud-atomic-vagrant-branched"></div>
-                    <div id="image-fedora-docker-base-branched"></div>
-                </div>
-            </div>
-        </div>
-
-        <hr></hr>
-
-        <div class="row">
-            <div class="col-md-6 col-md-offset-3">
-                <h3><a href="#amis-rawhide" id="amis-rawhide">AMIs (rawhide)</a></h3>
-                <div id="image-upload-rawhide-container">
-                    <div id="image-upload-base-rawhide"></div>
-                </div>
-            </div>
-            <div class="col-md-6 branched hidden">
-                <h3><a href="#amis-branched" id="amis-branched">AMIs (branched)</a></h3>
-                <div id="image-upload-branched-container">
-                    <div id="image-upload-base-branched"></div>
-                </div>
-            </div>
-        </div>
-
-        <hr></hr>
-
-        <div class="row">
-            <div class="col-md-6 col-md-offset-3">
-                <h3><a href="#appliances-rawhide" id="appliances-rawhide">Appliance Builds (rawhide)</a></h3>
-                <div id="appliance-rawhide--container">
-                    <div id="appliance-rawhide-armhfp"><h4>armhfp</h4></div>
-                </div>
-            </div>
-            <div class="col-md-6 branched hidden">
-                <h3><a href="#appliances-branched" id="appliances-branched">Appliance Builds (branched)</a></h3>
-                <div id="appliance-branched-container">
-                    <div id="appliance-branched-armhfp"><h4>armhfp</h4></div>
-                </div>
-            </div>
-        </div>
-
-        <hr></hr>
-
-        <div class="row">
-            <div class="col-md-12">
-                <h3><a href="#livecds-rawhide" id="livecds-rawhide">LiveCD Builds (rawhide)</a></h3>
-                <div id="livecd-rawhide-container" class="row">
-                    <div id="livecd-rawhide-x86_64" class="col-md-6"><h4>x86_64</h4></div>
-                    <div id="livecd-rawhide-i686" class="col-md-6"><h4>i686</h4></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row branched hidden">
-            <div class="col-md-12">
-                <h3><a href="#livecds-branched" id="livecds-branched">LiveCD Builds (branched)</a></h3>
-                <div id="livecd-branched-container" class="row">
-                    <div id="livecd-branched-x86_64" class="col-md-6"><h4>x86_64</h4></div>
-                    <div id="livecd-branched-i686" class="col-md-6"><h4>i686</h4></div>
-                </div>
-            </div>
-        </div>
-
-      </div>
     </div>
 
     <div id="footer">
@@ -204,7 +42,151 @@
     </div>
     <script src="js/jquery.min.js"></script>
     <script src="js/moment.min.js"></script>
-    <script src="js/site/common.js"></script>
-    <script src="js/site/main.js"></script>
+    <script src="js/handlebars-v3.0.3.js"></script>
+    <script id="row" type="text/x-handlebars-template">
+    </script>
+    <script id="layout" type="text/x-handlebars-template">
+      {{#if fetched }}
+        {{#if layout }}
+          {{#each layout.groups}}
+            {{>group}}
+            <hr>
+          {{/each}}
+        {{ else }}
+          <p>No data to display</p>
+        {{/if}}
+      {{ else }}
+        {{>loading}}
+      {{/if}}
+    </script>
+    <script id="group" type="text/x-handlebars-template">
+       <div id="{{ id }}" class="group row">
+         {{#if name}}
+          <h3>{{ name }}</h3>
+         {{/if}}
+         {{#each components}}
+           {{>component}}
+         {{/each}}
+       </div>
+    </script>
+    <script id="component" type="text/x-handlebars-template">
+      <div id="{{ id }}" class="component col-md-6">
+        <div class="component-header">
+         {{#if name}}
+           <h3>
+             <a id="{{ id }}" href="#{{ id }}">{{ name }}</a>
+           </h3>
+         {{/if}}
+        </div>
+        <div class="component-content">
+          {{>component_content}}
+        </div>
+      </div>
+    </script>
+    <script id="component_content" type="text/x-handlebars-template">
+      {{#if fetched}}
+        {{#if data}}
+          {{#each data}}
+            <p>
+              {{#if message.link}}
+                <a href="{{ message.link }}">
+              {{/if}}
+              <span class="log-name">{{ message.name }}</span>
+              <span class="log-status">{{ message.status }}</span>
+              <span class="log-timeago">{{ getTimeAgo timestamp }}</span>
+              {{#if message.link}}
+                </a>
+              {{/if}}
+              {{#if message.extra_text }}
+                {{#if message.extra_link }}
+                  <a href="{{ message.extra_link }}">
+                {{/if}}
+                <span class="log-extra_text">{{ message.extra_text }}</span>
+                {{#if message.extra_link}}
+                  </a>
+                {{/if}}
+              {{/if}}
+            </p>
+          {{/each}}
+        {{ else }}
+          <p>No results to display!</p>
+        {{/if}}
+      {{else}}
+        {{>loading}}
+      {{/if}}
+    </script>
+    <script id="loading" type="text/x-handlebars-template">
+      <p>Loading...</p>
+    </script>
+    <script type="text/javascript" charset="utf-8">
+      $(function () {
+          var baseUrl = "http://localhost:5000";
+          $('[type="text/x-handlebars-template"]').each(function (index, elem) {
+              Handlebars.registerPartial(elem.id, elem.innerHTML);
+          });
+          Handlebars.registerHelper('getTimeAgo', function (timestamp) {
+            var time = moment(timestamp.toString(), '%X');
+            return time.fromNow();
+          });
+          Handlebars.registerHelper('isEqual', function (item, value) {
+              return item == value;
+          });
+          function renderLayout(context) {
+            var source = $('#layout').html();
+            var template = Handlebars.compile(source);
+            var html = template(context);
+            $('#widgets-container').html(html);
+          }
+
+          function getLayout () {
+            $.ajax({
+                url: baseUrl + "/release-engineering-event-logs/layout",
+                dataType: 'jsonp',
+                success: function (data) {
+                  renderLayout({fetched: true, layout: data});
+                  fetchData();
+                },
+                error: function () {
+                  renderLayout({fetched: true});
+                }
+            });
+          }
+
+          function fetchData () {
+            $.ajax({
+              url: baseUrl + "/release-engineering-event-logs",
+              dataType: "jsonp",
+              success: function (data) {
+                var component_logs = {};
+                for (i=0; i < data.length; i++) {
+                  var log = data[i];
+                  log.message = JSON.parse(log.message);
+                  if (component_logs[log['category']]) {
+                    component_logs[log['category']].push(log);
+                  } else {
+                    component_logs[log['category']] = [log];
+                  }
+                }
+                var source = $('#component_content').html();
+                var template = Handlebars.compile(source);
+                $('.component').each(function (index, elem) {
+                    $(this).find('.component-content').html(
+                        template({
+                          fetched: true,
+                          data: component_logs[elem.id],
+                        })
+                    );
+                });
+              }
+            });
+          }
+
+          function init () {
+            renderLayout();
+            getLayout();
+          }
+          init();
+      });
+    </script>
   </body>
 </html>
