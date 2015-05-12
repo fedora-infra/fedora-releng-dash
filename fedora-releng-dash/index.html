@@ -173,7 +173,7 @@
                     $(this).find('.component-content').html(
                         template({
                           fetched: true,
-                          data: component_logs[elem.id],
+                          data: (component_logs[elem.id] || []).slice(0, 8),
                         })
                     );
                 });
