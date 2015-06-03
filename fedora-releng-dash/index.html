@@ -74,12 +74,13 @@
         <div class="component-header">
          {{#if name}}
            <h3>
-             <a id="{{ id }}" href="#{{ id }}">{{ name }}</a>
+             <a id="link-{{ id }}" href="#{{ id }}">{{ name }}</a>
            </h3>
          {{/if}}
         </div>
+
         <div class="component-content">
-          {{>component_content}}
+            {{>component_content}}
         </div>
       </div>
     </script>
@@ -87,13 +88,18 @@
       {{#if fetched}}
         {{#if data}}
           {{#each data}}
-            <p>
+            <p class="{{getLogClass message.status timestamp}}">
               {{#if message.link}}
                 <a href="{{ message.link }}">
               {{/if}}
               <span class="log-name">{{ message.name }}</span>
-              <span class="log-status">{{ message.status }}</span>
-              <span class="log-timeago">{{ getTimeAgo timestamp }}</span>
+              {{#if 'showStatus'}}
+                <span class="log-status">{{formatStatus message.status}}</span>
+              {{/if}}
+              <span class="log-timeago">{{getTimeAgo timestamp}}</span>
+              {{#if 'showTimeAt'}}
+                <span class="log-timeat">({{getTimeAt timestamp}})</span>
+              {{/if}}
               {{#if message.link}}
                 </a>
               {{/if}}
@@ -120,21 +126,74 @@
     </script>
     <script type="text/javascript" charset="utf-8">
       $(function () {
-          var baseUrl = "http://localhost:5000";
+          var baseUrl = "http://localhost:5000",
+              defaultOptions = {},
+              componentOptions = {};
+
           $('[type="text/x-handlebars-template"]').each(function (index, elem) {
               Handlebars.registerPartial(elem.id, elem.innerHTML);
           });
+
+          // Override Handlebar's default if block helper to support helper
+          // functions as conditionals
+          Handlebars.registerHelper('if', function() {
+              var conditional = arguments[0];
+              var args = Array.prototype.slice.call(arguments, 1);
+              var options = arguments[arguments.length - 1];
+
+              conditional = Handlebars.helpers[conditional] ?
+                Handlebars.helpers[conditional].apply(null, args) : conditional;
+
+              return conditional ? options.fn(this) : options.inverse(this);
+          });
+
           Handlebars.registerHelper('getTimeAgo', function (timestamp) {
-            var time = moment(timestamp.toString(), '%X');
-            return time.fromNow();
+            var t = moment(timestamp.toString(), '%X');
+            return t.fromNow();
           });
-          Handlebars.registerHelper('isEqual', function (item, value) {
-              return item == value;
+
+          Handlebars.registerHelper('showStatus', function(context) {
+              var id = context.data._parent.root.id,
+                  showStatus = (componentOptions[id] || {}).show_status;
+              return showStatus === undefined ? defaultOptions.show_status : showStatus;
           });
+
+          Handlebars.registerHelper('formatStatus', function(status) {
+              return defaultOptions.status_verb_map[status.toLowerCase()] ||
+                  status.toLowerCase();
+          });
+
+          Handlebars.registerHelper('showTimeAt', function(context) {
+              var id = context.data._parent.root.id,
+                  value = (componentOptions[id] || {}).show_time_at;
+              return value === undefined ? defaultOptions.show_time_at : value;
+          });
+
+          Handlebars.registerHelper('getTimeAt', function(timestamp) {
+              var t = moment(timestamp.toString(), '%X');
+              return t.calendar();
+          });
+
+          Handlebars.registerHelper('getLogClass', function(status, timestamp, context) {
+              var id = context.data._parent.root.id,
+                  cls = defaultOptions.status_class_map[status.toLowerCase()] || '',
+                  t = moment(timestamp.toString(), '%X'),
+                  now = moment(),
+                  componentCls = (
+                      (componentOptions[id] || {}).status_class_map || {}
+                    )[status.toLowerCase()];
+
+              if (t.isBefore(now.subtract(
+                      defaultOptions.old_log_threshold.key,
+                      defaultOptions.old_log_threshold.value)))
+                  componentCls = 'text-muted';
+              return componentCls === undefined ? cls : componentCls;
+          });
+
           function renderLayout(context) {
-            var source = $('#layout').html();
-            var template = Handlebars.compile(source);
-            var html = template(context);
+            var source = $('#layout').html(),
+                template = Handlebars.compile(source),
+                html = template(context);
             $('#widgets-container').html(html);
           }
 
@@ -144,6 +203,12 @@
                 dataType: 'jsonp',
                 success: function (data) {
                   renderLayout({fetched: true, layout: data});
+                  defaultOptions = data.default_options;
+                  data.groups.forEach(function(group) {
+                      group.components.forEach(function(component) {
+                          componentOptions[component.id] = component;
+                      });
+                  });
                   fetchData();
                 },
                 error: function () {
@@ -167,12 +232,13 @@
                     component_logs[log['category']] = [log];
                   }
                 }
-                var source = $('#component_content').html();
-                var template = Handlebars.compile(source);
+                var source = $('#component_content').html(),
+                    template = Handlebars.compile(source);
                 $('.component').each(function (index, elem) {
                     $(this).find('.component-content').html(
                         template({
                           fetched: true,
+                          id: elem.id,
                           data: (component_logs[elem.id] || []).slice(0, 8),
                         })
                     );
