@@ -126,7 +126,7 @@
     </script>
     <script type="text/javascript" charset="utf-8">
       $(function () {
-          var baseUrl = "http://localhost:5000",
+          var baseUrl = "https://apps.stg.fedoraproject.org/statscache",
               defaultOptions = {},
               componentOptions = {};
 
@@ -199,7 +199,7 @@
 
           function getLayout () {
             $.ajax({
-                url: baseUrl + "/release-engineering-event-logs/layout",
+                url: baseUrl + "/api/release-engineering-event-logs/layout",
                 dataType: 'jsonp',
                 success: function (data) {
                   renderLayout({fetched: true, layout: data});
@@ -219,7 +219,7 @@
 
           function fetchData () {
             $.ajax({
-              url: baseUrl + "/release-engineering-event-logs",
+              url: baseUrl + "/api/release-engineering-event-logs",
               dataType: "jsonp",
               success: function (data) {
                 var component_logs = {};
